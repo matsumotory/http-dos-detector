@@ -14,9 +14,9 @@ http-dos-detector use same Ruby code between Apache(mod_mruby) and nginx(ngx_mru
 LoadModule mruby_module modules/mod_mruby.so
 
 <IfModule mod_mruby.c>
-  mrubyPostConfigMiddle         /etc/httpd/conf.d/dos_detector/dos_detector_init.rb cache
-  mrubyChildInitMiddle          /etc/httpd/conf.d/dos_detector/dos_detector_worker_init.rb cache
-  mrubyAccessCheckerMiddle      /etc/httpd/conf.d/dos_detector/dos_detector.rb cache
+  mrubyPostConfigMiddle    /etc/httpd/conf.d/dos_detector/dos_detector_init.rb cache
+  mrubyChildInitMiddle     /etc/httpd/conf.d/dos_detector/dos_detector_worker_init.rb cache
+  mrubyAccessCheckerMiddle /etc/httpd/conf.d/dos_detector/dos_detector.rb cache
 </IfModule>
 ```
 
@@ -29,7 +29,7 @@ http {
   mruby_init_worker /path/to/nginx/conf/doc_detector/dos_detector_worker_init.rb cache;
   server {
     location /dos_detector {
-      mruby_access_checker /path/to/nginx/conf/doc_detector/dos_detector.rb cache;
+      mruby_access_handler /path/to/nginx/conf/doc_detector/dos_detector.rb cache;
     }
   }
 }
