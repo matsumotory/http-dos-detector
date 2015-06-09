@@ -1,14 +1,14 @@
 Userdata.new.shared_mutex = Mutex.new :global => true
 
 class DosDetector
-  MAGICSTR = ""
   def initialize r, c, config
     @r = r
     @cache = c
     @config = config
     @now = Time.now.to_i
     @counter_key = config[:counter_key].to_s
-    @counter_key_time = "#{@counter_key}_#{MAGICSTR}_time"
+    magic_str = config[:magic_str].to_s
+    @counter_key_time = "#{@counter_key}_#{magic_str}_time"
   end
 
   def analyze
