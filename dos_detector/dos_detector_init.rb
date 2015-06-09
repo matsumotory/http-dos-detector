@@ -1,7 +1,7 @@
 Userdata.new.shared_mutex = Mutex.new :global => true
 
 class DosDetector
-  MAGICSTR = "1fos9feemfs"
+  MAGICSTR = ""
   def initialize r, c, config
     @r = r
     @cache = c
