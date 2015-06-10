@@ -23,12 +23,13 @@ config = {
 host = r.hostname
 dos = DosDetector.new r, cache, config
 
-global_mutex.lock
-begin
-  Server.return Server::HTTP_SERVICE_UNAVAILABLE if dos.detect?
-rescue => e
-  raise "DosDetector failed: #{e}"
-ensure
-  global_mutex.unlock
+global_mutex.try_lock_loop do
+  begin
+    Server.return Server::HTTP_SERVICE_UNAVAILABLE if dos.detect?
+  rescue => e
+    raise "DosDetector failed: #{e}"
+  ensure
+    global_mutex.unlock
+  end
 end
 
