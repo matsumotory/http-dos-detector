@@ -1,7 +1,7 @@
 Server = get_server_class
 r = Server::Request.new
 cache = Userdata.new.shared_cache
-mutex = Userdata.new.shared_mutex
+global_mutex = Userdata.new.shared_mutex
 
 config = {
   # dos counter by key
@@ -23,12 +23,12 @@ config = {
 host = r.hostname
 dos = DosDetector.new r, cache, config
 
-mutex.lock
+global_mutex.lock
 begin
   Server.return Server::HTTP_SERVICE_UNAVAILABLE if dos.detect?
 rescue => e
   raise "DosDetector failed: #{e}"
 ensure
-  mutex.unlock
+  global_mutex.unlock
 end
 
