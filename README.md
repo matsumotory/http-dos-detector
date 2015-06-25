@@ -5,8 +5,8 @@ Detect the huge number of access like DoS for Apache httpd (nginx) using mod_mru
 http-dos-detector use same Ruby code between Apache(mod_mruby) and nginx(ngx_mruby).
 
 ## Install and Configuration
-- install mod_mruby if you use apache
-- install ngx_mruby if you use nginx
+- install [mod_mruby](https://github.com/matsumoto-r/mod_mruby) if you use apache
+- install [ngx_mruby](https://github.com/matsumoto-r/ngx_mruby) if you use nginx
 
 ### Apache and mod_mruby
 - copy `dos_detector/` and `dos_detector_apache.conf` into `/etc/httpd/conf.d/`
