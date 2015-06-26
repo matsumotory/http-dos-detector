@@ -1,6 +1,6 @@
 # http-dos-detector
 
-Detect the huge number of access like DoS for Apache httpd (nginx) using mod_mruby (ngx_mruby).
+Detect Huge Number of HTTP Requests on Apache and Nginx using mruby code.
 
 http-dos-detector use same Ruby code between Apache(mod_mruby) and nginx(ngx_mruby).
 
