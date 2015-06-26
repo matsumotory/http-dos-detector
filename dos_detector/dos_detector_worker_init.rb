@@ -1,2 +1,7 @@
-Userdata.new.shared_cache = Cache.new :namespace =>"dos_detector", :size_mb=> 512
+config = {:namespace =>"dos_detector"}
+
+c = Cache.new config
+c.clear
+
+Userdata.new.shared_cache = c
 
