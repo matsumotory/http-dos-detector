@@ -79,6 +79,8 @@ end
   conf.gem :github => 'matsumoto-r/mruby-mutex'
 ```
 
+http-dos-detector has the counter of any key in process-shared memory. When Apache or nginx was restarted, the counter was freed.
+
 ## License
 under the MIT License:
 - see LICENSE file
