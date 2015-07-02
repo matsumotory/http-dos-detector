@@ -34,7 +34,7 @@ class DosDetector
     end
   end
 
-  def init_or_update_cache data
+  def init_cache data
     @cache[@counter_key] = 1.to_s if data[:counter] == 0
     @cache[@counter_key_time] = @now.to_s if data[:time_diff] == 0
   end
@@ -80,7 +80,7 @@ class DosDetector
     data = self.analyze if data.nil?
     return false if data.nil?
 
-    self.init_or_update_cache data
+    self.init_cache data
 
     thr = @config[:threshold_counter]
     thr_time = @config[:threshold_time]
