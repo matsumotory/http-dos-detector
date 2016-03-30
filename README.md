@@ -80,7 +80,7 @@ end
 
 ## depend mrbgem
 ```ruby
-  conf.gem :github => 'matsumoto-r/mruby-cache'
+  conf.gem :github => 'matsumoto-r/mruby-localmemcache'
   conf.gem :github => 'matsumoto-r/mruby-mutex'
 ```
 
