@@ -2,7 +2,6 @@ Server = get_server_class
 r = Server::Request.new
 cache = Userdata.new.shared_cache
 global_mutex = Userdata.new.shared_mutex
-host = r.hostname
 
 config = {
   :counter_key => r.hostname,
