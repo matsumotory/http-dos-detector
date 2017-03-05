@@ -1,16 +1,16 @@
-Userdata.new.shared_mutex = Mutex.new :global => true
+Userdata.new.shared_mutex = Mutex.new global: true
 
 class DosDetector
-  def initialize r, c, config
+  def initialize(r, c, config)
     @r = r
     @cache = c
     @config = config
     @now = Time.now.to_i
     @counter_key = config[:counter_key].to_s
     @counter_key_time = "#{@counter_key}_#{config[:magic_str]}_time"
-    @data = self._analyze
+    @data = _analyze
 
-    self._detect @data
+    _detect @data
   end
 
   def analyze
@@ -18,7 +18,9 @@ class DosDetector
   end
 
   def _analyze
-    unless @counter_key.nil?
+    if @counter_key.nil?
+      @counter_key
+    else
       cnt = @cache[@counter_key]
       cnt = cnt.to_i
 
@@ -27,79 +29,52 @@ class DosDetector
       diff = @now - prev
 
       # time initialized
-      diff = 0 if prev == 0
-      {:file => @r.filename, :time_diff => diff, :counter => cnt, :counter_key => @counter_key}
-    else
-      nil
+      diff = 0 if prev.zero?
+      { file: @r.filename, time_diff: diff, counter: cnt, counter_key: @counter_key }
     end
   end
 
-  def init_cache data
-    @cache[@counter_key] = 1.to_s if data[:counter] == 0
-    @cache[@counter_key_time] = @now.to_s if data[:time_diff] == 0
+  def init_cache(data)
+    @cache[@counter_key] = 1.to_s if data[:counter].zero?
+    @cache[@counter_key_time] = @now.to_s if data[:time_diff].zero?
   end
 
-  def update_cache counter, date
+  def update_cache(counter, date)
     @cache[@counter_key] = (counter + 1).to_s
-    @cache[@counter_key_time] =  date.to_s
+    @cache[@counter_key_time] = date.to_s
   end
 
-  def detect? data=nil
- 
+  def detect?(data = nil)
     # run anlyze when data is nothing
-    data = self.analyze if data.nil?
+    data ||= analyze
     return false if data.nil?
 
-    thr = @config[:threshold_counter]
-    thr_time = @config[:threshold_time]
-    expire = @config[:expire_time]
-    behind = @config[:behind_counter]
-    cnt = data[:counter]
-    diff = data[:time_diff]
-
-    if cnt >= thr
-      if 0 <= diff && diff < thr_time
-        true
-      else
-        false
-      end
-    elsif cnt < 0
-      if diff > expire
-        false
-      else
-        true
-      end
+    if data[:counter] >= @config[:threshold_counter]
+      0 <= data[:time_diff] && data[:time_diff] < @config[:threshold_time]
+    elsif data[:counter] < 0
+      data[:time_diff] < @config[:expire_time]
     else
       false
     end
   end
 
-  def _detect data=nil
-
+  def _detect(data = nil)
     # run anlyze when data is nothing
-    data = self.analyze if data.nil?
+    data ||= analyze
     return false if data.nil?
 
-    self.init_cache data
+    init_cache data
 
-    thr = @config[:threshold_counter]
-    thr_time = @config[:threshold_time]
-    expire = @config[:expire_time]
-    behind = @config[:behind_counter]
-    cnt = data[:counter]
-    diff = data[:time_diff]
-
-    if cnt >= thr
-      if 0 <= diff && diff < thr_time
-        self.update_cache behind, @now
+    if data[:counter] >= @config[:threshold_counter]
+      if 0 <= data[:time_diff] && data[:time_diff] < @config[:threshold_time]
+        update_cache @config[:behind_counter], @now
       else
-        self.update_cache 0, @now
+        update_cache 0, @now
       end
-    elsif cnt < 0 && diff > expire
-      self.update_cache 0, @now
+    elsif data[:counter] < 0 && data[:time_diff] > @config[:expire_time]
+      update_cache 0, @now
     else
-      self.update_cache cnt, (@now - diff)
+      update_cache data[:counter], (@now - data[:time_diff])
     end
   end
-
 end
