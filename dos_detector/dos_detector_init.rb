@@ -5,7 +5,7 @@ class DosDetector
     @r = r
     @cache = c
     @config = config
-    @now = Time.now.to_i
+    @now = Time.now.to_f
     @counter_key = config[:counter_key].to_s
     @counter_key_time = "#{@counter_key}_#{config[:magic_str]}_time"
     @data = _analyze
@@ -25,7 +25,7 @@ class DosDetector
       cnt = cnt.to_i
 
       # counter time when initialized counter
-      prev = @cache[@counter_key_time].to_i
+      prev = @cache[@counter_key_time].to_f
       diff = @now - prev
 
       # time initialized
